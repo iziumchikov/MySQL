@@ -1,0 +1,18 @@
+		Time	Action	Message	Duration / Fetch
+3	1	14:07:09	USE bookstore	0 row(s) affected	0.000 sec
+3	2	14:07:09	CREATE TABLE IF NOT EXISTS COMPUTER(  serial_number INT(7) NOT NULL,  make VARCHAR(25) NOT NULL,   model CHAR(35),  processor_type VARCHAR(25),  memore CHAR(15),  disk_size VARCHAR(15) ) ENGINE = INNODB	0 row(s) affected	0.266 sec
+3	3	14:07:09	INSERT INTO COMPUTER VALUES(9871234, 'HP', 'Pavilion 500-210qe', 'Intel i5-4530', '6.0 GBytes', '1.0 TBytes')	1 row(s) affected	0.062 sec
+3	4	14:07:09	INSERT INTO COMPUTER VALUES(9871245, 'HP', 'Pavilion 500-210qe', 'Intel i5-4530', '6.0 GBytes', '1.0 TBytes')	1 row(s) affected	0.062 sec
+3	5	14:07:09	INSERT INTO COMPUTER VALUES(9871256, 'HP', 'Pavilion 500-210qe', 'Intel i5-4530', '6.0 GBytes', '1.0 TBytes')	1 row(s) affected	0.094 sec
+3	6	14:07:09	INSERT INTO COMPUTER VALUES(9871267, 'HP', 'Pavilion 500-210qe', 'Intel i5-4530', '6.0 GBytes', '1.0 TBytes')	1 row(s) affected	0.078 sec
+3	7	14:07:09	INSERT INTO COMPUTER VALUES(9871278, 'HP', 'Pavilion 500-210qe', 'Intel i5-4530',  '6.0 GBytes', '1.0 TBytes')	1 row(s) affected	0.046 sec
+3	8	14:07:09	ALTER TABLE COMPUTER ADD processor_speed DECIMAL(10, 2)	0 row(s) affected Records: 0  Duplicates: 0  Warnings: 0	0.734 sec
+3	9	14:07:10	SELECT * FROM computer ORDER BY make DESC LIMIT 0, 1000	5 row(s) returned	0.000 sec / 0.000 sec
+3	10	14:07:10	DESCRIBE COMPUTER	7 row(s) returned	0.000 sec / 0.000 sec
+3	11	14:07:10	SELECT serial_number, make, model FROM computer LIMIT 0, 1000	5 row(s) returned	0.000 sec / 0.000 sec
+3	12	14:07:10	ALTER TABLE COMPUTER DROP COLUMN processor_speed	0 row(s) affected Records: 0  Duplicates: 0  Warnings: 0	0.577 sec
+3	13	14:07:11	SELECT * FROM computer LIMIT 0, 1000	5 row(s) returned	0.000 sec / 0.000 sec
+3	14	14:07:11	RENAME TABLE COMPUTER  TO computer_backup	0 row(s) affected	0.203 sec
+3	15	14:07:11	SHOW TABLES	11 row(s) returned	0.000 sec / 0.000 sec
+3	16	14:07:11	DROP TABLE computer_backup	0 row(s) affected	0.125 sec
+3	17	14:07:11	SHOW TABLES	10 row(s) returned	0.000 sec / 0.000 sec

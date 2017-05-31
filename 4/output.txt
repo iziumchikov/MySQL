@@ -1,0 +1,12 @@
+		Time	Action	Message	Duration / Fetch
+3	1	22:12:16	USE bookstore	0 row(s) affected	0.000 sec
+3	2	22:12:16	SELECT customer_id   FROM customer     WHERE customer_id != 77779 LIMIT 0, 1000	7 row(s) returned	0.000 sec / 0.000 sec
+3	3	22:12:16	SELECT product_id, description  FROM product     WHERE category_id > 21 LIMIT 0, 1000	10 row(s) returned	0.000 sec / 0.000 sec
+3	4	22:12:16	SELECT last_name, first_name,  customer_id,email_address     FROM customer     WHERE customer_id = 11119 LIMIT 0, 1000	1 row(s) returned	0.000 sec / 0.000 sec
+3	5	22:12:16	SELECT item_id,item_price,discount_amount,  quantity,     item_price * quantity      AS price_total,  discount_amount * quantity     AS discount_total,     (item_price - discount_amount) * quantity     AS item_total     FROM orderitems     WHERE (item_price - discount_amount) * quantity > 900     ORDER BY item_total LIMIT 0, 1000	5 row(s) returned	0.000 sec / 0.000 sec
+3	6	22:12:16	SELECT store_id,region_id,region_name  FROM store LIMIT 0, 1000	7 row(s) returned	0.000 sec / 0.000 sec
+3	7	22:12:16	SELECT customer_id   FROM customer      WHERE email_address IS NOT NUll LIMIT 0, 1000	8 row(s) returned	0.000 sec / 0.000 sec
+3	8	22:12:16	SELECT DISTINCT customer_id  FROM orders LIMIT 0, 1000	7 row(s) returned	0.000 sec / 0.000 sec
+3	9	22:12:16	SELECT product_name, list_price, discount_percent,  list_price * (discount_percent / 100)     AS discount_amount,     list_price - (list_price * (discount_percent / 100))     AS discount_price     FROM product     ORDER BY discount_price     LIMIT 5	5 row(s) returned	0.000 sec / 0.000 sec
+3	10	22:12:16	SELECT customer_id, line1, line2,  CONCAT (city, ', ', state)     AS 'City State',  zip_code     FROM address LIMIT 0, 1000	12 row(s) returned	0.000 sec / 0.000 sec
+3	11	22:12:16	SELECT CONCAT (last_name, ', ',first_name)   AS 'Customer name'  FROM customer LIMIT 0, 1000	8 row(s) returned	0.000 sec / 0.000 sec

@@ -1,0 +1,14 @@
+--------------
+/* This script creates the database university */
+DROP DATABASE IF EXISTS university
+--------------
+
+Query OK, 9 rows affected (1.54 sec)
+
+--------------
+CREATE DATABASE IF NOT EXISTS university
+--------------
+
+Query OK, 1 row affected (0.00 sec)
+
+Bye

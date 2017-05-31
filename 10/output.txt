@@ -1,0 +1,228 @@
+--------------
+/*Query 1*/
+
+/*Returns list_price, formated list_price with one digit,
+
+converted list_price as an integer, casted list_price 
+as 
+an integer.*/
+
+SELECT list_price, FORMAT(list_price,1) AS format_price, 
+		   CONVERT(list_price, SIGNED) AS convert_price, 
+                   CAST(list_price AS SIGNED) AS cast_price
+	FROM product
+--------------
+
++------------+--------------+---------------+------------+
+| list_price | format_price | convert_price | cast_price |
++------------+--------------+---------------+------------+
+|     999.00 | 999.0        |           999 |        999 |
+|    1199.00 | 1,199.0      |          1199 |       1199 |
+|    2517.00 | 2,517.0      |          2517 |       2517 |
+|     989.99 | 990.0        |           990 |        990 |
+|    1299.00 | 1,299.0      |          1299 |       1299 |
+|    1415.00 | 1,415.0      |          1415 |       1415 |
+|      99.99 | 100.0        |           100 |        100 |
+|      49.99 | 50.0         |            50 |         50 |
+|      14.99 | 15.0         |            15 |         15 |
+|      49.99 | 50.0         |            50 |         50 |
+|      19.95 | 20.0         |            20 |         20 |
+|      30.00 | 30.0         |            30 |         30 |
+|      13.95 | 14.0         |            14 |         14 |
+|      49.99 | 50.0         |            50 |         50 |
+|      25.99 | 26.0         |            26 |         26 |
+|     599.00 | 599.0        |           599 |        599 |
+|     200.99 | 201.0        |           201 |        201 |
+|     500.99 | 501.0        |           501 |        501 |
++------------+--------------+---------------+------------+
+18 rows in set (0.00 sec)
+
+--------------
+    
+/*Query2*/
+
+/*Returns date_added, casted date_added with its date only,
+
+casted date_added with just year and the month, 
+casted 
+date_added with full time only*/
+
+SELECT date_added, 
+	CAST(date_added AS DATE) as 'date',
+	DATE_FORMAT(CAST(date_added as DATE), '%m/%y') AS 'month/year',
+	CAST(date_added AS TIME) AS 'time'
+	FROM product
+--------------
+
++---------------------+------------+------------+----------+
+| date_added          | date       | month/year | time     |
++---------------------+------------+------------+----------+
+| 2014-10-30 09:32:40 | 2014-10-30 | 10/14      | 09:32:40 |
+| 2014-12-05 16:33:13 | 2014-12-05 | 12/14      | 16:33:13 |
+| 2015-02-04 11:04:31 | 2015-02-04 | 02/15      | 11:04:31 |
+| 2015-06-01 11:12:59 | 2015-06-01 | 06/15      | 11:12:59 |
+| 2015-07-30 13:58:35 | 2015-07-30 | 07/15      | 13:58:35 |
+| 2015-07-30 14:12:41 | 2015-07-30 | 07/15      | 14:12:41 |
+| 2015-06-01 11:29:35 | 2015-06-01 | 06/15      | 11:29:35 |
+| 2015-07-30 14:18:33 | 2015-07-30 | 07/15      | 14:18:33 |
+| 2015-07-30 12:46:40 | 2015-07-30 | 07/15      | 12:46:40 |
+| 2015-07-30 13:14:15 | 2015-07-30 | 07/15      | 13:14:15 |
+| 2014-10-30 09:32:40 | 2014-10-30 | 10/14      | 09:32:40 |
+| 2013-10-30 09:32:40 | 2013-10-30 | 10/13      | 09:32:40 |
+| 2012-10-30 10:32:50 | 2012-10-30 | 10/12      | 10:32:50 |
+| 2012-10-30 10:34:30 | 2012-10-30 | 10/12      | 10:34:30 |
+| 2011-10-30 10:32:40 | 2011-10-30 | 10/11      | 10:32:40 |
+| 2015-10-30 09:35:20 | 2015-10-30 | 10/15      | 09:35:20 |
+| 2011-10-30 10:34:30 | 2011-10-30 | 10/11      | 10:34:30 |
+| 2012-10-30 10:32:40 | 2012-10-30 | 10/12      | 10:32:40 |
++---------------------+------------+------------+----------+
+18 rows in set (0.00 sec)
+
+--------------
+    
+/*Query3*/
+
+/*Returns list_price, discount_percent, a column
+ 
+discount_amount,that calculates discount_amount 
+and ROUND 
+function to round the result so it has
+2 decimal digits.*/
+
+SELECT list_price,discount_percent,
+	ROUND((list_price * (discount_percent / 100)),2) AS discount_amount
+	FROM product
+--------------
+
++------------+------------------+-----------------+
+| list_price | discount_percent | discount_amount |
++------------+------------------+-----------------+
+|     999.00 |            20.00 |          199.80 |
+|    1199.00 |            30.00 |          359.70 |
+|    2517.00 |            52.00 |         1308.84 |
+|     989.99 |            20.00 |          198.00 |
+|    1299.00 |             0.00 |            0.00 |
+|    1415.00 |            39.00 |          551.85 |
+|      99.99 |            30.00 |           30.00 |
+|      49.99 |            25.00 |           12.50 |
+|      14.99 |            30.00 |            4.50 |
+|      49.99 |            15.00 |            7.50 |
+|      19.95 |            20.00 |            3.99 |
+|      30.00 |            20.00 |            6.00 |
+|      13.95 |            20.00 |            2.79 |
+|      49.99 |            20.00 |           10.00 |
+|      25.99 |            15.00 |            3.90 |
+|     599.00 |            20.00 |          119.80 |
+|     200.99 |            20.00 |           40.20 |
+|     500.99 |            15.00 |           75.15 |
++------------+------------------+-----------------+
+18 rows in set (0.00 sec)
+
+--------------
+    
+/*Query4*/
+
+/*Returns order_date, formated date order_date that returns 
+the four-digit year stored in it. Formated
+ date order_date 
+that returns abbreviated months and 
+separates each date 
+component with dashes.Formated 
+date order_date that retuns 
+the hours and minutes 
+on a 12-hour clock with an am/pm 
+indicator.Formated
+date order_date that returns date in format
+MM/DD/YY HH:SS.*/
+
+SELECT order_date,
+	DATE_FORMAT(order_date, '%Y') AS 'year',
+    	DATE_FORMAT(order_date, '%b %d/%y') AS 'abbreviated',
+    	DATE_FORMAT(order_date,	'%l:%i %p') AS 'time',
+    	DATE_FORMAT(order_date, '%m/%d/%y %k:%i') AS 'MM/DD/YY HH:SS'
+	FROM orders
+--------------
+
++---------------------+------+-------------+----------+----------------+
+| order_date          | year | abbreviated | time     | MM/DD/YY HH:SS |
++---------------------+------+-------------+----------+----------------+
+| 2015-03-28 09:40:28 | 2015 | Mar 28/15   | 9:40 AM  | 03/28/15 9:40  |
+| 2015-03-28 11:23:20 | 2015 | Mar 28/15   | 11:23 AM | 03/28/15 11:23 |
+| 2015-03-29 09:44:58 | 2015 | Mar 29/15   | 9:44 AM  | 03/29/15 9:44  |
+| 2015-03-30 15:22:31 | 2015 | Mar 30/15   | 3:22 PM  | 03/30/15 15:22 |
+| 2015-03-31 05:43:11 | 2015 | Mar 31/15   | 5:43 AM  | 03/31/15 5:43  |
+| 2015-03-31 18:37:22 | 2015 | Mar 31/15   | 6:37 PM  | 03/31/15 18:37 |
+| 2015-04-01 23:11:12 | 2015 | Apr 01/15   | 11:11 PM | 04/01/15 23:11 |
+| 2015-04-02 11:26:38 | 2015 | Apr 02/15   | 11:26 AM | 04/02/15 11:26 |
+| 2015-04-03 12:22:31 | 2015 | Apr 03/15   | 12:22 PM | 04/03/15 12:22 |
+| 2015-05-03 12:22:31 | 2015 | May 03/15   | 12:22 PM | 05/03/15 12:22 |
+| 2015-06-03 12:22:31 | 2015 | Jun 03/15   | 12:22 PM | 06/03/15 12:22 |
++---------------------+------+-------------+----------+----------------+
+11 rows in set (0.00 sec)
+
+--------------
+/*Query5*/
+
+/*Returns card_number, length of the card_number, 
+last for digits 
+of card_number,conacted string 
+that returns card_number in 
+format: 
+XXXX-XXXX-XXXX-1234 where last four digits are 
+last 
+actual numbers of card_number.*/
+
+SELECT card_number, 
+	LENGTH(card_number) as 'length',
+       	RIGHT(card_number,LENGTH(card_number) - 12) AS last_four_digits,
+       	CONCAT('XXXX-XXXX-XXXX-',RIGHT(card_number,LENGTH(card_number) - 12)) AS 'X_four_digits'
+	FROM orders
+--------------
+
++------------------+--------+------------------+---------------------+
+| card_number      | length | last_four_digits | X_four_digits       |
++------------------+--------+------------------+---------------------+
+| 4111111111111111 |     16 | 1111             | XXXX-XXXX-XXXX-1111 |
+| 4012888888881881 |     16 | 1881             | XXXX-XXXX-XXXX-1881 |
+| 4111111111111111 |     16 | 1111             | XXXX-XXXX-XXXX-1111 |
+| 378282246310005  |     15 | 005              | XXXX-XXXX-XXXX-005  |
+| 4111111111111333 |     16 | 1333             | XXXX-XXXX-XXXX-1333 |
+| 6011111111111117 |     16 | 1117             | XXXX-XXXX-XXXX-1117 |
+| 5555555555554444 |     16 | 4444             | XXXX-XXXX-XXXX-4444 |
+| 4012888888881991 |     16 | 1991             | XXXX-XXXX-XXXX-1991 |
+| 4111111111111333 |     16 | 1333             | XXXX-XXXX-XXXX-1333 |
+| 4012888888881881 |     16 | 1881             | XXXX-XXXX-XXXX-1881 |
+| 4012888888881881 |     16 | 1881             | XXXX-XXXX-XXXX-1881 |
++------------------+--------+------------------+---------------------+
+11 rows in set (0.00 sec)
+
+--------------
+/*Query6*/
+
+/*Retuns order_id, order_date, approx_ship_date
+that retuns days with 
+added 2 days,ship_date,
+days_to_ship that shows the number of days 
+
+between the order date and the ship date.
+Displays all orders start 
+from May 2015.*/
+
+SELECT order_id, order_date,
+	ADDDATE(order_date, INTERVAL 2 DAY) AS approx_ship_date,
+	ship_date,
+       	DATEDIFF(ship_date, order_date) as 'days_to_ship',
+	TO_DAYS(ship_date) - TO_DAYS(order_date) as 'days_to_ship'
+	FROM orders
+    WHERE order_date >= '2015-05-01'
+--------------
+
++----------+---------------------+---------------------+-----------+--------------+--------------+
+| order_id | order_date          | approx_ship_date    | ship_date | days_to_ship | days_to_ship |
++----------+---------------------+---------------------+-----------+--------------+--------------+
+|       10 | 2015-05-03 12:22:31 | 2015-05-05 12:22:31 | NULL      |         NULL |         NULL |
+|       11 | 2015-06-03 12:22:31 | 2015-06-05 12:22:31 | NULL      |         NULL |         NULL |
++----------+---------------------+---------------------+-----------+--------------+--------------+
+2 rows in set (0.00 sec)
+
+Bye

@@ -1,0 +1,15 @@
+		Time	Action	Message	Duration / Fetch
+3	1	14:05:57	INSERT INTO category  VALUE ('71', 'Video Game')     ON DUPLICATE key update     category_id = 71	1 row(s) affected	0.109 sec
+3	2	14:05:57	UPDATE category  SET category_name = 'Camera'     WHERE category_id = 71	1 row(s) affected Rows matched: 1  Changed: 1  Warnings: 0	0.031 sec
+3	3	14:05:57	INSERT INTO product  VALUE ('17234', '71', 'Camera640', 'Canon', 'Canon EOS Rebel T5 DSLR Camera',      755.99, 0, '2015-04-30 13:14:15',2)  ON DUPLICATE key update     category_id = 71	1 row(s) affected	0.078 sec
+3	4	14:05:58	UPDATE product  SET discount_percent = 30     WHERE category_id = 71	1 row(s) affected Rows matched: 1  Changed: 1  Warnings: 0	0.031 sec
+3	5	14:05:58	DELETE FROM product  WHERE category_id = 71	1 row(s) affected	0.110 sec
+3	6	14:05:58	DELETE FROM category   WHERE category_id = 71	1 row(s) affected	0.078 sec
+3	7	14:05:58	UPDATE orders   SET card_type = 'American Express'     WHERE order_id = 9	1 row(s) affected Rows matched: 1  Changed: 1  Warnings: 0	0.031 sec
+3	8	14:05:58	DELETE FROM orderitems  WHERE order_id = 5	1 row(s) affected	0.047 sec
+3	9	14:05:58	DELETE FROM orders  WHERE order_id = 5	1 row(s) affected	0.015 sec
+3	10	14:05:58	UPDATE employee  SET salary = 5000     WHERE salary = 6000	1 row(s) affected Rows matched: 1  Changed: 1  Warnings: 0	0.015 sec
+3	11	14:05:58	INSERT INTO customer   VALUE (99999, 'rick@raven.com', '', 'Rick', 'Raven', 13, 14)     ON DUPLICATE key update     email_address = 'rick@raven.com'	1 row(s) affected	0.032 sec
+3	12	14:05:58	UPDATE customer   SET password = 'secret'     WHERE email_address = 'rick@raven.com'	1 row(s) affected Rows matched: 1  Changed: 1  Warnings: 0	0.015 sec
+3	13	14:05:58	UPDATE customer  SET password = 'reset'	9 row(s) affected Rows matched: 9  Changed: 9  Warnings: 0	0.015 sec
+3	14	14:05:58	SELECT 'SHIPPED' AS ship_status, order_id, order_date  FROM orders     WHERE ship_date IS NOT NULL  UNION  SELECT 'NOT SHIPPED' AS ship_status,order_id,order_date   FROM orders         WHERE ship_date IS NULL ORDER BY order_date	10 row(s) returned	0.016 sec / 0.000 sec

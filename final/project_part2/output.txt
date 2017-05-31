@@ -1,0 +1,256 @@
+--------------
+SELECT `name`
+	FROM faculty
+    WHERE dept_id = 1 
+		OR dept_id = 2
+--------------
+
++----------+
+| name     |
++----------+
+| Jones    |
+| Mobley   |
+| Williams |
+| Vajpayee |
++----------+
+4 rows in set (0.42 sec)
+
+--------------
+SELECT s.course_id, s.section_id, f.faculty_id, f.`name`
+	FROM section s
+		JOIN faculty f
+			ON s.faculty_id = f.faculty_id
+	WHERE s.term_id = 'SP13'
+--------------
+
++-----------+------------+------------+--------+
+| course_id | section_id | faculty_id | name   |
++-----------+------------+------------+--------+
+| CIS265    |       1206 |        111 | Jones  |
+| CIS253    |       1208 |        123 | Mobley |
+| CIS253    |       1209 |        111 | Jones  |
+| CIS253    |       1210 |        123 | Mobley |
++-----------+------------+------------+--------+
+4 rows in set (0.11 sec)
+
+--------------
+SELECT s.last_name, s.first_name, m.major_desc
+	FROM student s, major m
+    WHERE s.major_id = m.major_id
+--------------
+
++-----------+------------+-----------------------+
+| last_name | first_name | major_desc            |
++-----------+------------+-----------------------+
+| Diaz      | Jose       | AAS-Accounting        |
+| Tyler     | Mickey     | BS-Computer Science   |
+| Patel     | Rajesh     | BS-Accounting         |
+| Rickles   | Alex       | BS-Computer Science   |
+| Lee       | Brian      | BS-Telecommunications |
+| Khan      | Amir       | AAS-Computer Science  |
++-----------+------------+-----------------------+
+6 rows in set (0.11 sec)
+
+--------------
+SELECT s.last_name, s.first_name
+	FROM student s
+		JOIN registration r
+			ON s.student_id = r.student_id
+	WHERE s.start_term = 'WN13' 
+	  AND r.final_grade = 'F'
+--------------
+
++-----------+------------+
+| last_name | first_name |
++-----------+------------+
+| Diaz      | Jose       |
++-----------+------------+
+1 row in set (0.06 sec)
+
+--------------
+SELECT c.title
+	FROM course c
+    WHERE c.course_id 
+	IN
+	(SELECT course_id 
+		FROM section s
+		WHERE s.faculty_id 
+        IN
+		(SELECT faculty_id
+			FROM faculty f
+			WHERE f.`name` = 'Sen'))
+--------------
+
++------------+
+| title      |
++------------+
+| Accounting |
++------------+
+1 row in set (0.11 sec)
+
+--------------
+SELECT s.student_id, s.last_name, s.first_name, s.state
+	FROM student s
+	WHERE state = 'NJ' 
+	   OR state = 'NY'
+--------------
+
++------------+-----------+------------+-------+
+| student_id | last_name | first_name | state |
++------------+-----------+------------+-------+
+|        100 | Diaz      | Jose       | NJ    |
+|        101 | Tyler     | Mickey     | NY    |
+|        102 | Patel     | Rajesh     | NJ    |
+|        103 | Rickles   | Alex       | NJ    |
+|        104 | Lee       | Brian      | NY    |
+|        105 | Khan      | Amir       | NJ    |
++------------+-----------+------------+-------+
+6 rows in set (0.01 sec)
+
+--------------
+SELECT course_id,MAX(max_count) AS Max_count
+	FROM section s
+    GROUP BY s.course_id
+    ORDER BY Max_count DESC
+--------------
+
++-----------+-----------+
+| course_id | Max_count |
++-----------+-----------+
+| CIS253    |        45 |
+| AC101     |        35 |
+| CIS265    |        35 |
+| LA123     |        30 |
+| MA150     |        25 |
++-----------+-----------+
+5 rows in set (0.06 sec)
+
+--------------
+SELECT f.`name`,COUNT(s.section) AS Num_sections
+	FROM faculty f, section s
+    WHERE f.faculty_id = s.faculty_id
+    GROUP BY f.`name`
+    ORDER BY f.`name`
+--------------
+
++--------+--------------+
+| name   | Num_sections |
++--------+--------------+
+| Jones  |            3 |
+| Mobley |            3 |
+| Rivera |            1 |
+| Sen    |            1 |
++--------+--------------+
+4 rows in set (0.00 sec)
+
+--------------
+SELECT COUNT(r.student_id) AS 'TOTAL ENROLLED'
+	FROM registration r
+		JOIN section s 
+			ON r.section_id = s.section_id 
+            AND s.course_id = 'CIS253'
+--------------
+
++----------------+
+| TOTAL ENROLLED |
++----------------+
+|              6 |
++----------------+
+1 row in set (0.01 sec)
+
+--------------
+SELECT course.title, SUM(location.capacity) AS Total_capacity,
+				COUNT(s.section) AS Section_num
+	FROM section s
+		JOIN course 
+			ON s.course_id = course.course_id
+		JOIN location 
+			ON s.room_id = location.room_id
+	GROUP BY course.title
+    HAVING Section_num > 1
+--------------
+
++------------------+----------------+-------------+
+| title            | Total_capacity | Section_num |
++------------------+----------------+-------------+
+| Database Systems |            160 |           4 |
+| Systems Analysis |            125 |           3 |
++------------------+----------------+-------------+
+2 rows in set (0.05 sec)
+
+--------------
+CREATE OR REPLACE VIEW CSinstructors AS 
+SELECT * 
+	FROM faculty f
+	WHERE f.dept_id = (SELECT d.dept_id
+						FROM department d
+						WHERE f.dept_id = d.dept_id
+							AND dept_name = 'Computer Science')
+--------------
+
+Query OK, 0 rows affected (0.20 sec)
+
+--------------
+SELECT last_name,first_name
+	FROM student
+    WHERE MONTH(birth_date) = 10
+--------------
+
++-----------+------------+
+| last_name | first_name |
++-----------+------------+
+| Rickles   | Alex       |
+| Lee       | Brian      |
++-----------+------------+
+2 rows in set (0.00 sec)
+
+--------------
+DROP TABLE IF EXISTS Sp13SECT
+--------------
+
+Query OK, 0 rows affected (1.19 sec)
+
+--------------
+CREATE TABLE Sp13SECT AS 
+	(SELECT c.course_id,s.section_id,f.faculty_id,l.room_id
+		FROM section s
+			JOIN course c 
+				ON s.course_id = c.course_id
+            JOIN faculty f 
+				ON s.faculty_id = f.faculty_id
+            JOIN location l 
+				ON s.room_id = l.room_id
+		WHERE s.term_id = 'SP13')
+--------------
+
+Query OK, 4 rows affected (0.50 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+--------------
+DELETE FROM Sp13SECT
+	WHERE faculty_id = 
+		(SELECT f.faculty_id
+			FROM faculty f
+			WHERE f.`name` = 'Mobley')
+--------------
+
+Query OK, 2 rows affected (0.08 sec)
+
+--------------
+SELECT s.section_id,s.course_id
+	FROM section s
+	JOIN registration r 
+		ON s.section_id = r.section_id
+	GROUP BY s.section_id
+    HAVING COUNT(r.section_id) > 2
+--------------
+
++------------+-----------+
+| section_id | course_id |
++------------+-----------+
+|       1206 | CIS265    |
+|       1207 | LA123     |
++------------+-----------+
+2 rows in set (0.00 sec)
+
+Bye

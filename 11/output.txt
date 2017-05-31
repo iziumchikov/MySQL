@@ -1,0 +1,221 @@
+--------------
+/*Query 1*/
+/*Creates view customer_address and returns columns 
+from customer and addresses tables.*/
+CREATE OR REPLACE VIEW customer_address AS 
+	SELECT c.customer_id, c.email_address, c.last_name, c.first_name,
+			a.line1 AS bill_line1, a.line2 AS bill_line2, a.city AS bill_city,
+            a.state AS bill_state, a.zip_code AS bill_zip, a.line1 AS ship_line1,
+            a.line2 AS ship_line2, a.city AS ship_city, a.state AS ship_state,
+            a.zip_code AS ship_zip
+	FROM customer c, address a
+    WHERE c.customer_id = a.customer_id
+--------------
+
+Query OK, 0 rows affected (0.09 sec)
+
+--------------
+    
+/*Query 2*/
+/*Returns given columns from customer_address view.*/
+SELECT customer_id, last_name, first_name, bill_line1
+	FROM customer_address
+--------------
+
++-------------+-----------+------------+------------------------+
+| customer_id | last_name | first_name | bill_line1             |
++-------------+-----------+------------+------------------------+
+|       11119 | Sherwood  | Allan      | 1990 Westwood Blvd     |
+|       11119 | Sherwood  | Allan      | 1990 Westwood Blvd     |
+|       22229 | Zimmer    | Barry      | 16285 Wendell St.      |
+|       33339 | Brown     | Christine  | 19270 NW Cornell Rd.   |
+|       44449 | Goldstein | David      | 186 Vermont St.        |
+|       44449 | Goldstein | David      | 1374 46th Ave.         |
+|       55559 | Valentino | Erin       | 6982 Palm Ave.         |
+|       66669 | Wilson    | Frank Lee  | 23 Mountain View St.   |
+|       77779 | Hernandez | Gary       | 7361 N. 41st St.       |
+|       77779 | Hernandez | Gary       | 3829 Broadway Ave.     |
+|       88889 | Esway     | Heather    | 2381 Buena Vista St.   |
+|       88889 | Esway     | Heather    | 291 W. Hollywood Blvd. |
++-------------+-----------+------------+------------------------+
+12 rows in set (0.19 sec)
+
+--------------
+    
+/*Query 3*/
+/*Updates customer table using customer_addresses view*/
+UPDATE customer_address
+	SET ship_line1 = '1990 Westwood Blvd'
+    WHERE customer_id = '11119'
+--------------
+
+Query OK, 0 rows affected (0.30 sec)
+Rows matched: 2  Changed: 0  Warnings: 0
+
+--------------
+    
+/*Query 4*/
+/*Creates a view order_item_products that returns 
+columns from the Orders, OrderItems, and Product 
+tables.*/
+CREATE OR REPLACE VIEW order_item_products AS
+	SELECT o.order_id, o.order_date, o.tax_amount,o.ship_date,
+		   oi.item_price, oi.discount_amount,
+		   (oi.item_price - oi.discount_amount) AS final_price,
+           oi.quantity,((oi.item_price - oi.discount_amount) * quantity) as item_total,
+           p.product_name
+		FROM orders o, orderitems oi, product p
+        WHERE o.order_id = oi.order_id AND oi.product_id = p.product_id
+--------------
+
+Query OK, 0 rows affected (0.06 sec)
+
+--------------
+        
+/*Query 5*/
+/*Returns all info from order_item_products view*/
+SELECT * 
+	FROM order_item_products
+--------------
+
++----------+---------------------+------------+---------------------+------------+-----------------+-------------+----------+------------+------------------------+
+| order_id | order_date          | tax_amount | ship_date           | item_price | discount_amount | final_price | quantity | item_total | product_name           |
++----------+---------------------+------------+---------------------+------------+-----------------+-------------+----------+------------+------------------------+
+|        1 | 2015-03-28 09:40:28 |      32.32 | 2015-03-30 15:32:51 |    1199.00 |          359.70 |      839.30 |        1 |     839.30 | Lenovo H50 Desktop     |
+|        1 | 2015-03-28 09:40:28 |      32.32 | 2015-03-30 15:32:51 |      49.99 |            7.49 |       42.50 |        2 |      85.00 | Z Files                |
+|        2 | 2015-03-28 11:23:20 |       0.00 | 2015-03-29 12:52:14 |     989.99 |          197.80 |      792.19 |        1 |     792.19 | Toshiba Satellite S55T |
+|        2 | 2015-03-28 11:23:20 |       0.00 | 2015-03-29 12:52:14 |      19.95 |            3.99 |       15.96 |        1 |      15.96 | Modern Science         |
+|        2 | 2015-03-28 11:23:20 |       0.00 | 2015-03-29 12:52:14 |    1415.00 |          551.46 |      863.54 |        1 |     863.54 | Dell Inspiron 17 5000  |
+|        3 | 2015-03-29 09:44:58 |      89.92 | 2015-03-31 09:11:41 |    2517.00 |         1308.84 |     1208.16 |        1 |    1208.16 | HP Envy 750qe Desktop  |
+|        3 | 2015-03-29 09:44:58 |      89.92 | 2015-03-31 09:11:41 |     999.00 |          199.87 |      799.13 |        1 |     799.13 | Dell XPS 8700          |
+|        3 | 2015-03-29 09:44:58 |      89.92 | 2015-03-31 09:11:41 |    1299.00 |            0.00 |     1299.00 |        1 |    1299.00 | HP Pavilion 15t Star   |
+|        4 | 2015-03-30 15:22:31 |       0.00 | 2015-04-03 16:32:21 |    1199.00 |          359.70 |      839.30 |        2 |    1678.60 | Lenovo H50 Desktop     |
+|        4 | 2015-03-30 15:22:31 |       0.00 | 2015-04-03 16:32:21 |      13.95 |            2.79 |       11.16 |        1 |      11.16 | Space Force 9          |
+|        5 | 2015-03-31 05:43:11 |       0.00 | NULL                |    1299.00 |            0.00 |     1299.00 |        1 |    1299.00 | HP Pavilion 15t Star   |
+|        6 | 2015-03-31 18:37:22 |       0.00 | NULL                |    1299.00 |            0.00 |     1299.00 |        1 |    1299.00 | HP Pavilion 15t Star   |
+|        7 | 2015-04-01 23:11:12 |       0.00 | 2015-04-03 10:21:35 |     999.00 |          199.87 |      799.13 |        1 |     799.13 | Dell XPS 8700          |
+|        7 | 2015-04-01 23:11:12 |       0.00 | 2015-04-03 10:21:35 |      99.99 |           29.97 |       70.02 |        1 |      70.02 | Classical Music        |
+|        7 | 2015-04-01 23:11:12 |       0.00 | 2015-04-03 10:21:35 |      14.99 |            4.20 |       10.79 |        1 |      10.79 | 2412: The Return       |
+|        7 | 2015-04-01 23:11:12 |       0.00 | 2015-04-03 10:21:35 |     500.99 |           75.18 |      425.81 |        1 |     425.81 | HP LaserJet Pro        |
+|        8 | 2015-04-02 11:26:38 |       0.00 | NULL                |      49.99 |            7.49 |       42.50 |        1 |      42.50 | Z Files                |
+|        9 | 2015-04-03 12:22:31 |       0.00 | NULL                |     999.00 |          199.87 |      799.13 |        1 |     799.13 | Dell XPS 8700          |
+|        9 | 2015-04-03 12:22:31 |       0.00 | NULL                |      49.99 |            9.99 |       40.00 |        1 |      40.00 | From Another Planet    |
+|       10 | 2015-05-03 12:22:31 |       0.00 | NULL                |      25.99 |            3.89 |       22.10 |        1 |      22.10 | Supernova              |
+|       10 | 2015-05-03 12:22:31 |       0.00 | NULL                |     120.00 |           24.00 |       96.00 |        1 |      96.00 | HP Color LaserJet      |
+|       11 | 2015-06-03 12:22:31 |       0.00 | NULL                |     200.99 |           40.00 |      160.99 |        1 |     160.99 | HP LaserJet Pro        |
++----------+---------------------+------------+---------------------+------------+-----------------+-------------+----------+------------+------------------------+
+22 rows in set (0.14 sec)
+
+--------------
+    
+/*Query 6*/
+/*Creates a view product_summary. Returns summary 
+information about each product, counts total price
+for each product.*/
+CREATE OR REPLACE VIEW product_summary AS 
+	SELECT DISTINCT p.product_id,oi.quantity AS order_count,
+		   (oi.quantity * (oi.item_price - discount_amount)) AS order_total
+	FROM product p, orderitems oi
+    WHERE p.product_id = oi.product_id
+    ORDER BY p.product_id
+--------------
+
+Query OK, 0 rows affected (0.03 sec)
+
+--------------
+    
+/*Query 7*/
+/*Returns total sales for the five best selling 
+products from product_summary view.*/
+SELECT order_total 
+	FROM product_summary
+    ORDER BY order_total DESC LIMIT 5
+--------------
+
++-------------+
+| order_total |
++-------------+
+|     1678.60 |
+|     1299.00 |
+|     1208.16 |
+|      863.54 |
+|      839.30 |
++-------------+
+5 rows in set (0.05 sec)
+
+--------------
+    
+/*Query 8*/
+/*Creates a view named cheap_products_view whose 
+subquery retrieves products with prices less than
+$15.*/
+CREATE OR REPLACE VIEW cheap_products_view AS 
+	SELECT * 
+		FROM product
+        WHERE list_price < 15
+--------------
+
+Query OK, 0 rows affected (0.05 sec)
+
+--------------
+        
+/*Query 9*/
+/*Returns all info from cheap_product_view*/
+SELECT * 
+	FROM cheap_products_view
+--------------
+
++------------+-------------+--------------+------------------+----------------------+------------+------------------+---------------------+-----------+
+| product_id | category_id | product_code | product_name     | description          | list_price | discount_percent | date_added          | vendor_id |
++------------+-------------+--------------+------------------+----------------------+------------+------------------+---------------------+-----------+
+|       9234 |          51 | video1234    | 2412: The Return | Aliens return        |      14.99 |            30.00 | 2015-07-30 12:46:40 |         5 |
+|      13234 |          31 | DVD12356     | Space Force 9    | Adventures of heroes |      13.95 |            20.00 | 2012-10-30 10:32:50 |         9 |
++------------+-------------+--------------+------------------+----------------------+------------+------------------+---------------------+-----------+
+2 rows in set (0.02 sec)
+
+--------------
+    
+/*Query 10*/
+/*Creates a view named cheap_products_view2 whose 
+subquery retrieves products with prices greater 
+than $50 and adds CHECK OPTION constraint.*/
+CREATE OR REPLACE VIEW cheap_products_view2 AS
+	SELECT *
+		FROM product
+        WHERE list_price > 50 WITH CHECK OPTION
+--------------
+
+Query OK, 0 rows affected (0.03 sec)
+
+--------------
+/*INSERT statement that adds this row to the cheap_ products_view2*/
+INSERT INTO cheap_products_view2
+	(product_id, category_id,product_code,product_name,list_price, description, discount_percent, date_added,vendor_id) 
+VALUES
+	('17888','41','book db','Fundamental of database systems','45.99','Fundamental of database systems Elmasri','20.00','2015-06-01 11:12:59','2')
+--------------
+
+--------------
+        
+/*Query 11*/
+/*Creates an index named i_customers_last_name on
+the lastname column of the Customer table.*/
+CREATE INDEX i_customer_last_name ON
+	customer(last_name)
+--------------
+
+Query OK, 0 rows affected (0.64 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+    
+/*Query 12*/
+/*Drops the index i_customers_last_name.*/
+ALTER TABLE customer
+	DROP INDEX i_customer_last_name
+--------------
+
+Query OK, 0 rows affected (0.16 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+Bye
